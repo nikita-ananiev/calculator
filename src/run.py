@@ -1,5 +1,6 @@
 import math
 import stack
+funccountarg = {'power': 2, 'sin': 1, 'cos': 1, 'tg': 1, 'abs': 1, 'sqrt': 1, 'log': 2}
 
 def runfunc(name, arg):
     if name[0] == 'abs':
@@ -15,6 +16,12 @@ def runfunc(name, arg):
     elif name[0] == 'tg':
         arg = arg * math.pi / 180
         return math.tan(arg)
+
+def run2func(name, a1, a2):
+    if name == 'power':
+        return math.pow(a1, a2)
+    if name == 'log':
+        return math.log(a2, a1)
 
 def unr(x):
     return x * (-1)
@@ -35,6 +42,11 @@ def run(splexems):
             a = stack.pop()
             stack.push(unr(a))
         else:
-            a = stack.pop()
-            stack.push(runfunc([i[1:]], a))
+            if funccountarg[i[1:]] == 1:
+                a = stack.pop()
+                stack.push(runfunc([i[1:]], a))
+            else:
+                a = stack.pop()
+                b = stack.pop()
+                stack.push(run2func(i[1:], b, a))
     return stack.pop()
