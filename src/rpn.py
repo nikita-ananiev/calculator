@@ -29,6 +29,8 @@ def buildRPN(lexemes):
             stack.push('(')
             lastlexem = lexem[0]
             continue
+        elif lexem[0] in '!':
+            spLexems.append(lexem[0])
         else:
             operation = lexem[0]
             if i == 1:

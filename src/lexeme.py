@@ -6,11 +6,11 @@ def lexemes(phrase):
             if i != j:
                 continue
             flag1 = False
-        if phrase[i] in 'abcdefghijklmnopqrstuvwxyz_':
+        if phrase[i] in 'ACPabcdefghijklmnopqrstuvwxyz_':
             lexem = ''
             j = i
             flag1 = True
-            while phrase[j] in 'abcdefghijklmnopqrstuvwxyz_':
+            while phrase[j] in 'ACPabcdefghijklmnopqrstuvwxyz_':
                 lexem += phrase[j]
                 j += 1
                 if j == len(phrase):
@@ -34,6 +34,6 @@ def lexemes(phrase):
             lexem = ''.join(lexem)
             lex.append(lexem)
             lexem = ''
-        elif phrase[i] in '+-/*()':
+        elif phrase[i] in '+-/*()^!':
             lex.append(phrase[i])
     return lex
