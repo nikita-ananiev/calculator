@@ -34,6 +34,6 @@ def lexemes(phrase):
             lexem = ''.join(lexem)
             lex.append(lexem)
             lexem = ''
-        elif phrase[i] in '+-/*()^!':
+        elif phrase[i] in '+-/*()^!,':
             lex.append(phrase[i])
     return lex

@@ -1,11 +1,12 @@
 import stack
 
-prioritet = {'+': 1, '-': 1, '*': 2, '/': 2, '^': 3, 'min': 4}
+prioritet = {',': 0, '+': 1, '-': 1, '*': 2, '/': 2, '^': 3, 'min': 4}
 
 def buildRPN(lexemes):
     spLexems = []
     i = 0
     lastlexem = ''
+    flag = False
     for lexem in lexemes:
         i += 1
         if lexem[0] == 'F':
@@ -31,14 +32,15 @@ def buildRPN(lexemes):
             continue
         elif lexem[0] in '!':
             spLexems.append(lexem[0])
+        elif lexem[0] == ',':
+            j = stack.peek()
+            while j != '(':
+                spLexems.append(stack.pop())
+                j = stack.peek()
+            lastlexem = lexem[0]
         else:
             operation = lexem[0]
-            if i == 1:
-                if operation == '-':
-                    operation = 'min'
-                stack.push(operation)
-                continue
-            elif lastlexem == '(':
+            if i == 1 or lastlexem in '(,^':
                 if operation == '-':
                     operation = 'min'
                 stack.push(operation)
@@ -60,6 +62,7 @@ def buildRPN(lexemes):
                     continue
                 break
             stack.push(operation)
+            lastlexem = lexem[0]
     while not stack.empty():
         spLexems.append(stack.pop())
     return spLexems

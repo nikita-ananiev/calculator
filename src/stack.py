@@ -23,3 +23,5 @@ def peek():
     if empty():
         return None
     return data[0]
+
+
