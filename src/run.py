@@ -50,9 +50,9 @@ def run2func(name, a1, a2):
     elif name == 'log':
         return math.log(a2, a1)
     elif name == 'C':
-        return factorial(a2) / (factorial(a2 - a1) * factorial(a1))
+        return int(factorial(a2) / (factorial(a2 - a1) * factorial(a1)))
     elif name == 'A':
-        return factorial(a2) / factorial(a2 - a1)
+        return int(factorial(a2) / factorial(a2 - a1))
     elif name == 'hypot':
         return math.hypot(a1, a2)
     elif name == 'ellipseArea':
