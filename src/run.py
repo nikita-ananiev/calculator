@@ -68,13 +68,15 @@ def run(splexems):
     for i in splexems:
         if type(i) is float:
             stack.push(float(i))
-        elif i in '+-*/^':
+        elif i in '+-*/^%':
             a = stack.pop()
             b = stack.pop()
             if i == '+': stack.push(b + a)
             elif i == '-': stack.push(b - a)
             elif i == '*': stack.push(a * b)
             elif i == '/': stack.push(b / a)
+            elif i == '%':
+                stack.push(b * a / 100)
             else: stack.push(math.pow(b, a))
         elif i == 'min':
             a = stack.pop()
