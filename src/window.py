@@ -1,95 +1,148 @@
 from calculate import *
-from tkinter import *
+from run import *
+import tkinter as tk
+from tkinter import messagebox
 
-win = Tk()
-win.title('Calculator')
-win.geometry('490x500')
+
+# Создание главного окна
+win = tk.Tk()
+win.title('Мой калькулятор')
 win.resizable(False, False)
 
-line = Entry(win, font=("Courier New", 30))
-line.grid(row=0, column=0, columnspan=4)
+# Создание строки ввода выражения
+line = tk.Entry(win, font=("Courier New", 24))
+line.pack(fill=tk.X)
+line.focus_set()
 
-def button1pressed():
-    line.insert(len(line.get()), '1')
-button1 = Button(win, text='1', font=("Courier New", 30, 'bold'), command=button1pressed)
-button1.grid(row=1, column=0)
+# Создание области кнопок
+frame = tk.Frame(win)
+frame.pack(expand=True)
 
-def button2pressed():
-    line.insert(len(line.get()), '2')
-button2 = Button(win, text='2', font=("Courier New", 30, 'bold'), command=button2pressed)
-button2.grid(row=1, column=1)
+# Юникод-символы backspace и смены знака
+bsp = '\u232B'
+sig = '\u00B1'
 
-def button3pressed():
-    line.insert(len(line.get()), '3')
-button3 = Button(win, text='3', font=("Courier New", 30, 'bold'), command=button3pressed)
-button3.grid(row=1, column=2)
+# Тексты кнопок
+buttons = [
+    bsp, 'C', '(', ')', '?',
+    '7', '8', '9', '/', '%',
+    '4', '5', '6', '*', '^',
+    '1', '2', '3', '-', '!',
+    sig, '0', '.', '+', '='
+]
 
-def buttonPluspressed():
-    line.insert(len(line.get()), '+')
-buttonPlus = Button(win, text='+', font=("Courier New", 30), command=buttonPluspressed)
-buttonPlus.grid(row=1, column=3)
 
-def button4pressed():
-    line.insert(len(line.get()), '4')
-button4 = Button(win, text='4', font=("Courier New", 30, 'bold') ,command=button4pressed)
-button4.grid(row=2, column=0)
+# Функция проверки: является ли символ цифрой или десятичным разделителем
+def is_digit_or_decimal(c):
+    return c.isdigit() or c == '.'
 
-def button5pressed():
-    line.insert(len(line.get()), '5')
-button5 = Button(win, text='5', font=("Courier New", 30, 'bold'), command=button5pressed)
-button5.grid(row=2, column=1)
 
-def button6pressed():
-    line.insert(len(line.get()), '6')
-button6 = Button(win, text='6', font=("Courier New", 30, 'bold'), command=button6pressed)
-button6.grid(row=2, column=2)
+# Функция-обработчик нажатия (большинства) кнопок
+def common_pressed(text):
+    cursor_position = line.index(tk.INSERT)
+    line.insert(cursor_position, text)
 
-def buttonMinuspressed():
-    line.insert(len(line.get()), '-')
-buttonMinus = Button(win, text='-', font=("Courier New", 30), command=buttonMinuspressed)
-buttonMinus.grid(row=2, column=3)
 
-def button7pressed():
-    line.insert(len(line.get()), '7')
-button7 = Button(win, text='7', font=("Courier New", 30, 'bold'), command=button7pressed)
-button7.grid(row=3, column=0)
-
-def button8pressed():
-    line.insert(len(line.get()), '8')
-button8 = Button(win, text='8', font=("Courier New", 30, 'bold'),command=button8pressed)
-button8.grid(row=3, column=1)
-
-def button9pressed():
-    line.insert(len(line.get()), '9')
-button9 = Button(win, text='9', font=("Courier New", 30, 'bold'), command=button9pressed)
-button9.grid(row=3, column=2)
-
-def buttonMulpressed():
-    line.insert(len(line.get()), '*')
-buttonMul = Button(win, text='*', font=("Courier New", 30), command=buttonMulpressed)
-buttonMul.grid(row=3, column=3)
-
-def buttonDecimalpressed():
-    line.insert(len(line.get()), '.')
-buttonDecimal = Button(win, text='.', font=("Courier New", 30), command=buttonDecimalpressed)
-buttonDecimal.grid(row=4, column=0)
-
-def button0pressed():
-    line.insert(len(line.get()), '0')
-button0 = Button(win, text='0', font=("Courier New", 30, 'bold'), command=button0pressed)
-button0.grid(row=4, column=1)
-
-def buttonResultpressed():
+# Функция-обработчик нажатия кнопки результата (=)
+def result_pressed():
     expression = line.get()
-    line.delete(0, last=END)
+    line.delete(0, last=tk.END)
     line.insert(0, calculate(expression))
-buttonResult = Button(win, text='=', font=("Courier New", 30), command=buttonResultpressed)
-buttonResult.grid(row=4, column=2)
 
-def buttonDivpressed():
-    line.insert(len(line.get()), '/')
-buttonDiv = Button(win, text='/', font=("Courier New", 30), command=buttonDivpressed)
-buttonDiv.grid(row=4, column=3)
 
+# Функция-обработчик нажатия кнопки очистки выражения (С)
+def clean_pressed():
+    line.delete(0, last=tk.END)
+
+
+# Функция-обработчик нажатия кнопки справки (?)
+def about_pressed():
+    messagebox.showinfo(
+        "Авторы", "Модуль расчета:\nАнаньев Никита"
+        "\n-----------------------------------\n"
+        "Оконное приложение:\nМихайлова Александра")
+
+
+# Функция-обработчик нажатия кнопки backspace
+def bs_pressed():
+    cursor_position = line.index(tk.INSERT)
+    line.delete(cursor_position - 1, cursor_position)
+
+
+# Функция-обработчик нажатия кнопки смены знака
+def sign_pressed():
+    expression = line.get()
+    cursor_position = line.index(tk.INSERT)
+    number = ''
+    i = cursor_position
+    while i > 0 and is_digit_or_decimal(expression[i-1]):
+        number = expression[i-1] + number
+        i -= 1
+    first = i
+    i = cursor_position
+    while i < len(expression) and is_digit_or_decimal(expression[i]):
+        number = number + expression[i]
+        i += 1
+    if len(number) == 0:
+        return
+    last = i
+    if first > 1 and last < len(expression) and expression[first-2:first] == "(-" and expression[last] == ")":
+        line.delete(first-2, last+1)
+        line.insert(first-2, number)
+    else:
+        line.delete(first, last)
+        line.insert(first, "(-" + number + ")")
+        line.icursor(last + 2)
+
+
+# Функция-обработчик (верхнего уровня) нажатия кнопки
+def on_pressed(text):
+    if text == '=':
+        result_pressed()
+    elif text == 'C':
+        clean_pressed()
+    elif text == '?':
+        about_pressed()
+    elif text == bsp:
+        bs_pressed()
+    elif text == sig:
+        sign_pressed()
+    else:
+        common_pressed(text)
+
+
+# Функция-обработчик выбора функции (и вставка ее в выражение)
+def insert_function(function):
+    cursor_position = line.index(tk.INSERT)
+    line.insert(cursor_position, function + "()")
+    line.icursor(cursor_position + len(function) + 1)
+
+
+# Создание кнопок
+for i in range(len(buttons)):
+    text = buttons[i]
+    row = i // 5 + 1
+    column = i % 5
+    button = tk.Button(frame, width=3, text=text, font=(
+        "Courier New", 30, 'bold'), command=lambda t=text: on_pressed(t))
+    button.grid(row=row, column=column)
+    if text == '=':
+        default_button = button
+# Привязка кнопки '=' к нажатию ENTER
+win.bind('<Return>', (lambda e, b=default_button: b.invoke()))
+
+
+# Создание меню вставки функций
+func_list = funccountarg.keys()
+functions = tk.Menubutton(win, text="Вставить функцию...",
+                          font=("Courier New", 20, 'bold'))
+functions.pack(fill=tk.X)
+menu = tk.Menu(functions, tearoff=False, font=("Courier New", 20, 'bold'))
+for func_name in func_list:
+    menu.add_command(
+        label=func_name, command=lambda text=func_name: insert_function(text))
+functions['menu'] = menu
+
+
+# Запуск оконного приложения
 win.mainloop()
-
