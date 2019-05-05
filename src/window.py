@@ -113,9 +113,15 @@ def on_pressed(text):
 
 # Функция-обработчик выбора функции (и вставка ее в выражение)
 def insert_function(function):
+    arg_count = funccountarg[function]
     cursor_position = line.index(tk.INSERT)
-    line.insert(cursor_position, function + "()")
-    line.icursor(cursor_position + len(function) + 1)
+    if arg_count > 0:
+        line.insert(cursor_position, function +
+                    "(" + "," * (arg_count-1) + ")")
+        line.icursor(cursor_position + len(function) + 1)
+    else:
+        line.insert(cursor_position, function)
+        line.icursor(cursor_position + len(function))
 
 
 # Создание кнопок
