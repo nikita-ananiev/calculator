@@ -47,7 +47,12 @@ def common_pressed(text):
 def result_pressed():
     expression = line.get()
     line.delete(0, last=tk.END)
-    line.insert(0, calculate(expression))
+    try:
+        line.insert(0, calculate(expression))
+    except ZeroDivisionError:
+        messagebox.showerror("Ошибка", "Деление на ноль")
+    except BaseException:
+        messagebox.showerror("Ошибка", "Неправильное выражение или сбой вычисления")
 
 
 # Функция-обработчик нажатия кнопки очистки выражения (С)
@@ -140,14 +145,14 @@ win.bind('<Return>', (lambda e, b=default_button: b.invoke()))
 
 # Создание меню вставки функций
 func_list = funccountarg.keys()
-functions = tk.Menubutton(win, text="Вставить функцию...",
+functions_button = tk.Menubutton(win, text="Вставить функцию...",
                           font=("Courier New", 20, 'bold'))
-functions.pack(fill=tk.X)
-menu = tk.Menu(functions, tearoff=False, font=("Courier New", 20, 'bold'))
+functions_button.pack(fill=tk.X)
+menu = tk.Menu(functions_button, tearoff=False, font=("Courier New", 20, 'bold'))
 for func_name in func_list:
     menu.add_command(
         label=func_name, command=lambda text=func_name: insert_function(text))
-functions['menu'] = menu
+functions_button['menu'] = menu
 
 
 # Запуск оконного приложения
