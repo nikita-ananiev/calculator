@@ -1,6 +1,6 @@
 import stack
 
-prioritet = {',': 0, '+': 1, '-': 1, '*': 2, '/': 2, '^': 3, 'min': 4}
+prioritet = {',': 0, '+': 1, '-': 1, '*': 2, '/': 2, '%': 2, '^': 3, 'min': 4}
 
 def buildRPN(lexemes):
     spLexems = []
